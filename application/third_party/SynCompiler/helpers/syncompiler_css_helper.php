@@ -163,8 +163,14 @@ function SynCompileCSS_ () {
 				$has_modification = true;
 				file_put_contents($cached_scss_file, ($comp['out']));				// Save SCSS file
 
-				// Using SASS Ruby Gem
+				// Check SASS support
+				$sass_support = false;
 				if(function_exists('exec')) {
+					$sass_support = substr(exec('sass -v'), 0, 4) == 'Sass';
+				}
+
+				// Using SASS Ruby Gem
+				if($sass_support) {
 					exec('sass '.$cache_dir.'_style_'.$module_name.'.scss '.$cache_dir.'_style_'.$module_name.'.css --style compressed');
 				}
 

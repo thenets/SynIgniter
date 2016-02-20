@@ -1,5 +1,5 @@
 $(document).ready(function(){
-	var title = "SynCompiler!                                                                     ";
+	var title = "SynIgniter!                                                                     ";
 	var position = 0;
 
 	function titleAnimation () {
