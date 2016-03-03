@@ -30,7 +30,7 @@ If you want a better debug for SCSS, you can install the SASS Gem in developer e
 \curl -sSL https://get.rvm.io | bash -s stable --ruby
 
 # Install SASS gem
-sudo su -c "gem install sass"
+sudo gem install sass
 ```
 
 
