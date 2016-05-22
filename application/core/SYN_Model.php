@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS `heros` (
 );
 
 
-// Class Model example
+// Model example
 // ========================================================================
 class Hero extends SYN_Model {
     public function __contruct ($id=0) {
@@ -27,6 +27,18 @@ class Hero extends SYN_Model {
 }
 
 
+// Controller example
+// ========================================================================
+class Heros extends CI_Controller {
+    function index () {
+        $this->load->model('hero');
+
+        $arbitro = new Hero();
+        $arbitro->real_name = 'Logan';
+        $arbitro->hero_name = 'Wolverine';
+        $arbitro->save();
+    }
+}
 */
 
 class SYN_Model extends CI_Model {
