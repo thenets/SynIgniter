@@ -20,56 +20,56 @@ CREATE TABLE IF NOT EXISTS `heros` (
 // Class Model example
 // ========================================================================
 class Hero extends SYN_Model {
-	public function __contruct ($id=0) {
-		// @SYN_Model::scaffold ($table_name, $id, <optional : className>)
-		$this->scaffold('heros', $id);
-	}	
+    public function __contruct ($id=0) {
+        // @SYN_Model::scaffold ($table_name, $id, <optional : className>)
+        $this->scaffold('heros', $id);
+    }   
 }
 
 
 */
 
 class SYN_Model extends CI_Model {
-	protected $SYN_table_name = null;
+    protected $SYN_table_name = null;
 
-	/*
-		Create a Scaffold
-	*/
-	public function scaffold ($table_name, $id=0) {
-		$this->SYN_table_name = $table_name;
+    /*
+        Create a Scaffold
+    */
+    public function scaffold ($table_name, $id=0) {
+        $this->SYN_table_name = $table_name;
 
-		$this->getAttributes($table_name, $id);
-	}
-
-
-	/*
-		Config
-		Return config data
-	*/
-	public function config () {
-		$config = new stdClass();
-		$config->table_name = $this->SYN_table_name;
-		$config->class_name = strtolower(get_class($this));
-
-		return $config;
-	}
+        $this->getAttributesFromDatabase($table_name, $id);
+    }
 
 
     /*
-        Construtor
+        Config
+        Return config data
     */
-    public function getAttributes ($table_name, $id=0) {
-    	// Load database
+    private function config () {
+        $config = new stdClass();
+        $config->table_name = $this->SYN_table_name;
+        $config->class_name = strtolower(get_class($this));
+
+        return $config;
+    }
+
+
+    /*
+        Get Attributes From Database to Create Object Vars
+    */
+    private function getAttributesFromDatabase ($table_name, $id=0) {
+        // Load database
         $this->load->database();
 
-		// Create atributes to this object based on table
-		foreach ($this->db->list_fields($this->config()->table_name) as $var) {
-			$this->{$var} = '';
-		}
+        // Create atributes to this object based on table
+        foreach ($this->db->list_fields($this->config()->table_name) as $var) {
+            $this->{$var} = '';
+        }
 
-		/*
-			Get data from database
-		*/
+        /*
+            Get data from database
+        */
         if ($id) {
             $this->db->where('id_'.$this->config()->class_name, $id);
 
@@ -91,19 +91,19 @@ class SYN_Model extends CI_Model {
         Insert or update object into database
     */
     public function save () {
-    	// Create Obj to manipulated
-    	$db_obj = new stdClass();
-    	foreach (get_object_vars($this) as $key => $value) {
-    		if(substr($key, 0, 4) != 'SYN_')
-    			$db_obj->{$key} = $value;
-    	}
+        // Create Obj to manipulated
+        $db_obj = new stdClass();
+        foreach (get_object_vars($this) as $key => $value) {
+            if(substr($key, 0, 4) != 'SYN_')
+                $db_obj->{$key} = $value;
+        }
 
         // Update
         // If has a PK 'id_nameclass'
         if ( isset($this->{'id_'.$this->config()->class_name}) ) {
             $this->db->update(
-            	$this->config()->table_name, 
-            	$db_obj, array('id_'.$this->config()->class_name => $this->{'id_'.$this->config()->class_name})
+                $this->config()->table_name, 
+                $db_obj, array('id_'.$this->config()->class_name => $this->{'id_'.$this->config()->class_name})
             );
         }
 
